@@ -18,3 +18,6 @@ class TaskUpdate (BaseModel):
 
 class TaskResponse(TaskCore):
     task_id: int = Field(..., ge=0, description="Task ID")
+    
+    class Config:
+        orm_mode = True
