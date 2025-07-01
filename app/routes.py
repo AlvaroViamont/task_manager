@@ -49,7 +49,7 @@ def get_task_by_id(id: int, db: Session = Depends(get_db)):
     task = Task.get_or_404(db, id)
     return task
 
-@router.patch("/{id}", response_model=TaskResponse)
+@router.put("/{id}", response_model=TaskResponse)
 def update_task(id: int, task_update: TaskUpdate, db: Session = Depends(get_db)):
     task = Task.get_or_404(db, id)
     update_data = task_update.model_dump(exclude_unset=True)
