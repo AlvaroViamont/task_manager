@@ -66,3 +66,10 @@ def change_task_status(id: int, status_update: TaskStatusUpdate, db: Session = D
     db.commit()
     db.refresh(task)
     return task
+
+@router.delete("/{id}", status_code=204)
+def delete_task(id: int, db: Session = Depends(get_db)):
+    task = Task.get_or_404(db, id)
+    db.delete(task)
+    db.commit()
+    return
