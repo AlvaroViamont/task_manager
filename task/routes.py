@@ -4,7 +4,7 @@ from sqlalchemy.orm import Session
 from task.schemas import TaskCreate, TaskResponse, TaskUpdate, TaskStatusUpdate
 from typing import Optional, List
 from database import get_db
-from task.models import Task
+from models import Task
 
 
 router = APIRouter(

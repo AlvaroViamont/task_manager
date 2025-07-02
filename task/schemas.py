@@ -8,7 +8,7 @@ class TaskCore(BaseModel):
     due_date: FutureDatetime = Field(..., description="Task Status")
 
 class TaskCreate (TaskCore):
-    pass
+    user_id: int = Field(..., ge=0, description="User ID to whom the task belongs")
 
 class TaskUpdate (BaseModel):
     title: Optional[str] = Field(None, min_length=5, max_length=60, description="Task Title")

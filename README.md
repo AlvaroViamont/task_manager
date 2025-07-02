@@ -6,20 +6,123 @@ Una API RESTful desarrollada con **FastAPI** y **SQLAlchemy** para gestionar tar
 
 ## 📦 Estructura del Proyecto
 
+# 📝 Task Manager API
+
+Una API RESTful desarrollada con **FastAPI** y **SQLAlchemy** para gestionar tareas. Incluye funcionalidades como roles, usuarios, autenticación, autorización, y migraciones con Alembic. Arquitectura basada en servicios y separación de responsabilidades.
+
+---
+
+## 📦 Estructura del Proyecto (Arquitectura por Servicios)
+
 ```
 project/
 │
 ├── app/
-│   ├── __init__.py
-│   ├── routes.py            # Endpoints de la API
-│   ├── models.py            # Modelos ORM con SQLAlchemy
-│   ├── schemas.py           # Esquemas de Pydantic para validación y serialización
-│   └── database.py          # Configuración del motor y sesión de la base de datos
+│   ├── main.py               # Punto de entrada FastAPI con lifespan
+│   ├── core/                 # Configuración, seguridad y utilidades
+│   │   ├── config.py         # Variables de entorno (Settings)
+│   │   ├── security.py       # Lógica de JWT y password hashing
+│   │   └── dependencies.py   # Dependencias comunes (get_db, get_current_user)
+│   ├── database/
+│   │   ├── session.py        # Engine y sesión de SQLAlchemy
+│   │   ├── base.py           # Declaración global de Base
+│   │   └── init_db.py        # Inicialización manual si se requiere
+│   ├── models/               # Modelos ORM
+│   │   ├── __init__.py
+│   │   ├── task.py
+│   │   ├── user.py
+│   │   ├── role.py
+│   │   └── association.py
+│   ├── schemas/              # Esquemas de Pydantic
+│   │   ├── task.py
+│   │   ├── user.py
+│   │   └── role.py
+│   ├── services/             # Lógica de negocio (por recurso)
+│   │   ├── task_service.py
+│   │   ├── user_service.py
+│   │   └── auth_service.py
+│   ├── api/                  # Rutas separadas por recurso
+│   │   ├── deps.py           # Dependencias comunes de API
+│   │   ├── routes/
+│   │   │   ├── auth.py
+│   │   │   ├── tasks.py
+│   │   │   ├── users.py
+│   │   │   └── roles.py
+│   │   └── router.py         # Incluye todos los routers
+│   └── alembic/              # Migraciones con Alembic
+│       ├── versions/
+│       └── env.py
 │
-├── config.py                # Clase Settings con carga de variables desde .env
-├── main.py                  # Punto de entrada principal de la aplicación FastAPI
-├── .env                     # Variables de entorno (NO debe subirse al repositorio)
-└── requirements.txt         # Lista de dependencias del proyecto
+├── .env                     # Variables de entorno
+├── requirements.txt         # Dependencias
+└── README.md
+```
+
+---
+
+## 🔐 Módulo de Autenticación y Autorización
+
+- Contraseñas seguras con `passlib`
+- Tokens JWT con `python-jose`
+- Endpoints:
+  - `POST /auth/login` → genera token
+  - `GET /me` → usuario actual
+
+**Autorización por rol:**
+- Decoradores y dependencias (`get_current_user`, `get_current_admin`, etc.)
+- Filtro en endpoints según permisos
+
+---
+
+## 🔧 Módulo de Servicios
+
+Servicios desacoplados acceden a la base de datos a través de sesiones:
+
+```python
+# task_service.py
+from app.models import Task
+
+def get_tasks(db, user_id):
+    return db.query(Task).filter(Task.user_id == user_id).all()
+```
+
+---
+
+## 📦 Migraciones con Alembic
+
+1. Inicializar Alembic:
+```bash
+alembic init alembic
+```
+2. Configurar `env.py` para importar `Base.metadata`
+3. Generar migraciones:
+```bash
+alembic revision --autogenerate -m "add user and role"
+```
+4. Aplicar:
+```bash
+alembic upgrade head
+```
+
+---
+
+## 🛡️ Roles sugeridos
+
+| Rol     | Permisos                                          |
+|---------|---------------------------------------------------|
+| user    | CRUD de sus propias tareas                        |
+| manager | Leer tareas de su equipo, asignar responsables    |
+| admin   | Control total del sistema, gestión de usuarios    |
+
+---
+
+## 🚀 Ejecutar
+
+```bash
+uvicorn app.main:app --reload
+```
+
+
 ```
 
 ---
