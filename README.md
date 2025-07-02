@@ -26,7 +26,6 @@ project/
 │   ├── database/
 │   │   ├── session.py        # Engine y sesión de SQLAlchemy
 │   │   ├── base.py           # Declaración global de Base
-│   │   └── init_db.py        # Inicialización manual si se requiere
 │   ├── models/               # Modelos ORM
 │   │   ├── __init__.py
 │   │   ├── task.py
@@ -41,20 +40,20 @@ project/
 │   │   ├── task_service.py
 │   │   ├── user_service.py
 │   │   └── auth_service.py
-│   ├── api/                  # Rutas separadas por recurso
-│   │   ├── deps.py           # Dependencias comunes de API
-│   │   ├── routes/
-│   │   │   ├── auth.py
-│   │   │   ├── tasks.py
-│   │   │   ├── users.py
-│   │   │   └── roles.py
-│   │   └── router.py         # Incluye todos los routers
-│   └── alembic/              # Migraciones con Alembic
-│       ├── versions/
-│       └── env.py
-│
+│   └── api/                  # Rutas separadas por recurso
+│       ├── deps.py           # Dependencias comunes de API
+│       ├── routes/
+│       │   ├── auth.py
+│       │   ├── tasks.py
+│       │   ├── users.py
+│       │   └── roles.py
+│       └── router.py         # Incluye todos los routers
+├── alembic/                  # Migraciones con Alembic
+│   ├── versions/
+│   └── env.py
 ├── .env                     # Variables de entorno
 ├── requirements.txt         # Dependencias
+├── alembic.ini
 └── README.md
 ```
 
@@ -113,17 +112,6 @@ alembic upgrade head
 | user    | CRUD de sus propias tareas                        |
 | manager | Leer tareas de su equipo, asignar responsables    |
 | admin   | Control total del sistema, gestión de usuarios    |
-
----
-
-## 🚀 Ejecutar
-
-```bash
-uvicorn app.main:app --reload
-```
-
-
-```
 
 ---
 
