@@ -1,25 +1,14 @@
-import os
-import sys
 from logging.config import fileConfig
 
-from sqlalchemy import engine_from_config, pool
+from sqlalchemy import engine_from_config
+from sqlalchemy import pool
+
 from alembic import context
 
-# 👉 Agregar path raíz del proyecto para importaciones absolutas
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-
-from config import settings
-from models import Base, Task, User, Role  # 👈 ¡IMPORTANTE! importar modelos explícitamente
-
-# Configuración alembic
+# this is the Alembic Config object, which provides
+# access to the values within the .ini file in use.
 config = context.config
-fileConfig(config.config_file_name)  # type: ignore
 
-# Sobrescribir URL
-config.set_main_option("sqlalchemy.url", settings.DATABASE_URL)
-
-# 👇 ¡Este metadata ya tiene los modelos!
-target_metadata = Base.metadata
 # Interpret the config file for Python logging.
 # This line sets up loggers basically.
 if config.config_file_name is not None:
